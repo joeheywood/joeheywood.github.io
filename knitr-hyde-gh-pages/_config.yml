@@ -1,0 +1,38 @@
+# Dependencies
+markdown:         kramdown
+
+# Permalinks
+permalink: /:year/:month/:day/:title.html
+# relative_permalinks: true
+
+# Setup
+title:            My kaggle blog
+tagline:          'A blog about kaggling'
+description:      'Jekyll-powered, Hyde-themed, knitr-ready.'
+baseurl: "/knitr-hyde" # If you are making a gh-pages project blog, this is
+                        # the name of your project repo, preceded by a /'
+                        # Set it to just "" if you are making a user page.
+                        
+baseurlknitr:  "/knitr-hyde/" # This will always be your baseurl plus and extra '/'
+                                # at the end.  It's used only when knitr renders
+                                # your R Markdown files.
+                        
+url: "https://joeheywood.github.io" # the base hostname & protocol for your site
+
+# set limit on number of post to appear on Home page
+homepostlimit: 4
+
+# Disqus comments:
+disqus:           true
+shortname:        homerhanumatknitrhyde
+
+# Social Media
+twitter:          true # add a twitter button to each post
+facebook:         true # add a facebook share button to each post
+
+author:
+  name:           'Joe Heywood'
+  url:            https://statistics.rainandrhino.org
+
+github:
+  repo:           https://github.com/joeheywood/knitr-hyde
