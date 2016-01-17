@@ -20,7 +20,7 @@ and comparing the predictions. The crucial difference is that the comparison is 
 single category, rather than the entire sample.
 
 
-```r
+{% highlight r %}
 trainLogit <- function(dtm, inTrain) {
     multinom(DV_cuisine ~ ., data = dtm[inTrain,], MaxNWts = 10000)
 }
@@ -41,7 +41,7 @@ runLogit <- function(seed) {
     logitModel <- trainLogit(dtm, inTrain)
     results <- testLogit(logitModel, dtm[-inTrain])
 }
-```
+{% endhighlight %}
 
 When we run the predict command on our testing data, we get the predicted value 
 and when we run the same command, but with the `type = "probs"` argument, we get a 
@@ -364,12 +364,12 @@ reduce the original matrix to a smaller size and returns a vector that we can
 multiply through the original matrix to get it to the right size.
 
 
-```r
+{% highlight r %}
 getIrlba <- function(dtm) {
     all.data.svd = irlba(dtm, nv = 400,nu=0)
     as.data.frame(dtm %*% all.data.svd$v)
 }
-```
+{% endhighlight %}
 
 The updated results? A small improvement. Not massive. But an improvement all the
 same. 
