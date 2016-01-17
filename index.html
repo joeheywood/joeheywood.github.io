@@ -1,111 +1,23 @@
-<!DOCTYPE html>
-<html>
+---
+layout: default
+---
 
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Joeheywood.github.io : " />
+<div class="home">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+  <h1 class="page-heading">Posts</h1>
 
-    <title>Joeheywood.github.io</title>
-  </head>
+  <ul class="post-list">
+    {% for post in site.posts %}
+      <li>
+        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
 
-  <body>
+        <h2>
+          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+        </h2>
+      </li>
+    {% endfor %}
+  </ul>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/joeheywood">View on GitHub</a>
+  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
 
-          <h1 id="project_title">Joeheywood.github.io</h1>
-          <h2 id="project_tagline"></h2>
-
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-joes-website" class="anchor" href="#welcome-to-joes-website"><span class="octicon octicon-link"></span></a>Welcome to Joe's website</h3>
-
-<p>This will eventually be a place to put any code, stuff, ideas, graphs, stuff I might be working on.</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>For Example:</p>
-
-<h4>
-<a name="test-table" class="anchor" href="#test-table"><span class="octicon octicon-link"></span></a>Test Table</h4>
-
-<table>
-<thead><tr>
-<th>year</th>
-<th>month</th>
-<th>link</th>
-</tr></thead>
-<tbody>
-<tr>
-<td>2014</td>
-<td>3</td>
-<td><a href="http://www.nottinghaminsight.org.uk/d/103523">http://www.nottinghaminsight.org.uk/d/103523</a></td>
-</tr>
-<tr>
-<td>2014</td>
-<td>2</td>
-<td><a href="http://www.nottinghaminsight.org.uk/d/104927">http://www.nottinghaminsight.org.uk/d/104927</a></td>
-</tr>
-<tr>
-<td>2014</td>
-<td>1</td>
-<td><a href="http://www.nottinghaminsight.org.uk/d/103522">http://www.nottinghaminsight.org.uk/d/103522</a></td>
-</tr>
-<tr>
-<td>2013</td>
-<td>12</td>
-<td><a href="http://www.nottinghaminsight.org.uk/d/105038">http://www.nottinghaminsight.org.uk/d/105038</a></td>
-</tr>
-<tr>
-<td>2013</td>
-<td>11</td>
-<td><a href="http://www.nottinghaminsight.org.uk/d/105153">http://www.nottinghaminsight.org.uk/d/105153</a></td>
-</tr>
-</tbody>
-</table><p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<blockquote>
-<ul>
-<li>Each variable forms a column</li>
-<li>Each observation forms a row</li>
-<li>Each type of observational unit forms a table</li>
-</ul>
-</blockquote>
-
-<p>See <a href="http://vita.had.co.nz/papers/tidy-data.pdf">Hadley Wickham's article</a> on 
-this topic for more information. Sometimes, aspects of the data do not conform 
-to this ideal (for example if councils add both the id and name of a 
-supplier/category into one column). But I have tried to take out things like 
-totals/subtotals rows, empty rows and so on.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
-  </body>
-</html>
+</div>

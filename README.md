@@ -1,2 +1,0 @@
-joeheywood.github.io
-====================
