@@ -1,6 +1,6 @@
 ---
 layout: post
-title: predictions with logistic regression
+title: what's cooking: predictions with logistic regression
 comments: true
 ---
 
@@ -23,24 +23,38 @@ single category, rather than the entire sample.
 
 {% highlight r %}
 trainLogit <- function(dtm, inTrain) {
+    # create multinomial model. 
+    # Args: dtm (data.frame), 
+    # inTrain(numeric vector) - for partition if needed - if not select 1:nrow(dtm)
+    # value multinomial logistic regression model (nnet::multinom)
     multinom(DV_cuisine ~ ., data = dtm[inTrain,], MaxNWts = 10000)
 }
 
 testLogit <- function(mod, testData) {
+    # test multinomial logistic regression model
+    # Args: mod nnet:multinom object, 
+    # testData (data.frame) data on which to test model
+    # should include column 'correct' with correct cuisine category
     preds <- predict(mod, testData)
     probs <- predict(mod, testData, type = "probs")
     bestProb <- sapply(1:length(preds), function(x) {
         probs[x, preds[x]]
     })
+    # Value data frame with nrow(testData) rows and columns:
+    # correct - the correct cuisine, prediction - the predicted cuisine
+    # probs - the probability value for the best option and isCorr (bool) if prediction is correct
     data.frame(correct = testData$DV_cuis, prediction = preds,
                probs = bestProb, isCorr = dtm$DV_cuisine[-inTrain] == preds)
 }
 
 runLogit <- function(seed) {
+    # run model for a given seed (numeric). Get data from train.json,
+    # create data partition from seed, create model on training partition, then test on test partition
     dtm <- getTrainingData("train.json")
     inTrain <- getPartitionForSeed(seed, dtm)
     logitModel <- trainLogit(dtm, inTrain)
-    results <- testLogit(logitModel, dtm[-inTrain])
+    # Value data.frame (from testLogit above)
+    testLogit(logitModel, dtm[-inTrain])
 }
 {% endhighlight %}
 
