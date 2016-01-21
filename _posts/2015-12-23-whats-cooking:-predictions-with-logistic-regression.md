@@ -1,6 +1,6 @@
 ---
 layout: post
-title: what's cooking: predictions with logistic regression
+title: whats cooking: predictions with logistic regression
 comments: true
 ---
 
