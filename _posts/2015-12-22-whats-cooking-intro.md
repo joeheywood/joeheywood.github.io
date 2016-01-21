@@ -1,6 +1,7 @@
 ---
 layout: post
 title: whats cooking intro
+comments: true
 ---
 
 The first competition I entered came under the title "What's cooking" and involved
@@ -89,4 +90,6 @@ getPartitionForSeed <- function(seed, dtm, p = 0.8) {
 {% endhighlight %}
 
 Having done all of that, we're ready to start coming up with a prediction model.
+
+
 
