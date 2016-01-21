@@ -4,35 +4,21 @@ title: whats cooking intro
 comments: true
 ---
 
-The first competition I entered came under the title "What's cooking" and involved
-coming up with predictions about what cuisine (mostly nationality) a particular 
-recipe (that appeared on yummly.com) came from. I liked the sound of this 
-competition, as I am a bit of a foodie and I am very interested in learning how 
-to process text in R, rather than in python. 
+The first competition I entered came under the title "What's cooking" and involved predicting which part of the world recipes, that appeared on yummly.com, came from. I liked the sound of this competition, as I am a bit of a foodie - so it seemed like a good place to start. 
 
-The training and testing data came in JSON format, giving an ID number, a list 
-of ingredients and (in the training data only) one of twenty cuisines. Having 
-worked a bit with Naive Bayes classifiers, I immediately thought that this was
-going to be difficult to categorize in a single model.
-
-My principle goal for this model was to come up with a plan and execute it, 
-hopefully coming up with a template for future projects, some reusable code and
-learn a few lessons. In this post, I briefly go over how to get the data, get it ready
-to be analyzed and some simple analysis.
+The data came in JSON format, giving an ID number, a list of ingredients and one of twenty cuisines. My principle goal for this competiton was to come up with a plan and execute it, hopefully coming up with a template for future projects, some reusable code and a few lessons learned. More important than getting a high score was understanding how and why a model might work and perhaps its limitations. In this post, I briefly go over how to get the data, get it ready to be analyzed and some simple analysis.
 
 ### Getting the data
 
-Converting the data to a data.frame from JSON is pretty simple, using the `jsonlite`
-package. This flattens the hierarchical json file into one that is easier to work
-with in R. 
+Converting the data to a data.frame from JSON was pretty simple, using the `jsonlite` package. This flattens the hierarchical json file into one that is easier to work with in R. 
 
-I then start using the `tm` package to put each item of ingredients into a Corpus, 
-so we can start making transformations to the text and then create a Document 
-Term Matrix that can be used in our various models.
+I then start using the `tm` package to put each item of ingredients into a Corpus, so we can start making transformations to the text and then create a Document Term Matrix that can be used in our various models. This matrix is essentially what is known as a 'bag of words', where each word in the recipe - regardless of what came before and after it.
 
 
 {% highlight r %}
 getTrainingData <- function(jsonFile) {
+  # get data from json file and convert to data frame
+  # Arg: the path of the json file
   train <- fromJSON(j, simplifyDataFrame = TRUE, flatten = TRUE)
   ingredients <- Corpus(VectorSource(train$ingredients))
   # future transformations to the ingredients will go here...
@@ -41,6 +27,7 @@ getTrainingData <- function(jsonFile) {
   dtm <- as.data.frame(as.matrix(DocumentTermMatrix(ingredients)))
   # add dependent variable (cuisine) from train object
   dtm$DV_cuisine <- train$cuisine
+  # Value:  a data frame with DV_cuisine for the cuisine and a column for each word in the 
   dtm # data.frame object returned
 }
 
@@ -51,10 +38,7 @@ getTrainingData <- function(jsonFile) {
 
 ### Distribution of cuisines
 
-There are twenty cuisines, as you can see below, the cuisines are not equally 
-distributed. There are more Western cuisines than Eastern and quite a big 
-proportion are Italian, Mexican, Indian, Southern US and Chinese.
-
+There are twenty cuisines, as you can see below, the cuisines are not equally distributed. There are more Western cuisines than Eastern and quite a big proportion are Italian, Mexican, Indian, Southern US and Chinese.
 
 ![plot of chunk treemap](/figure/treemap-1.png) 
 
