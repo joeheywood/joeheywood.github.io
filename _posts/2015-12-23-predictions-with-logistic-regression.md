@@ -1,6 +1,7 @@
 ---
 layout: post
 title: predictions with logistic regression
+comments: true
 ---
 
 I decided to start off with a simple model that I know well - logistic regression.
