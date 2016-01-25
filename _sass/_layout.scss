@@ -5,7 +5,8 @@
     border-top: 5px solid $grey-color-dark;
     border-bottom: 1px solid $grey-color-light;
     width: 100%;
-    min-height: 56px;
+    height: 56px;
+    background-color: "#FFFFFF";
 
     // Positioning context for the mobile navigation icon
     position: fixed;
@@ -169,7 +170,7 @@
  * Page content
  */
 .page-content {
-    padding: $spacing-unit 0;
+    padding: 50px 0px;
 }
 
 .page-heading {
