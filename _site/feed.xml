@@ -6,12 +6,12 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 16 Jan 2016 12:48:51 +0000</pubDate>
-    <lastBuildDate>Sat, 16 Jan 2016 12:48:51 +0000</lastBuildDate>
+    <pubDate>Sat, 06 Feb 2016 22:54:52 +0000</pubDate>
+    <lastBuildDate>Sat, 06 Feb 2016 22:54:52 +0000</lastBuildDate>
     <generator>Jekyll v3.0.1</generator>
     
       <item>
-        <title>predictions with logistic regression</title>
+        <title>(whats cooking) predictions with logistic regression</title>
         <description>&lt;p&gt;I decided to start off with a simple model that I know well - logistic regression.
 I’m sure that there are other, more effective ways of classifying our data, but
 at this early stage, I decided to stick with what I know.&lt;/p&gt;
@@ -28,28 +28,40 @@ works in a similar way to producing a separate logistic regression for each cate
 and comparing the predictions. The crucial difference is that the comparison is with a 
 single category, rather than the entire sample.&lt;/p&gt;
 
-&lt;p&gt;```r
-trainLogit &amp;lt;- function(dtm, inTrain) {
-    multinom(DV_cuisine ~ ., data = dtm[inTrain,], MaxNWts = 10000)
-}&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;trainLogit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;inTrain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# create multinomial model. 
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# Args: dtm (data.frame), 
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# inTrain(numeric vector) - for partition if needed - if not select 1:nrow(dtm)
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# value multinomial logistic regression model (nnet::multinom)
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;multinom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DV_cuisine&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inTrain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MaxNWts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
-&lt;p&gt;testLogit &amp;lt;- function(mod, testData) {
-    preds &amp;lt;- predict(mod, testData)
-    probs &amp;lt;- predict(mod, testData, type = “probs”)
-    bestProb &amp;lt;- sapply(1:length(preds), function(x) {
-        probs[x, preds[x]]
-    })
-    data.frame(correct = testData$DV_cuis, prediction = preds,
-               probs = bestProb, isCorr = dtm$DV_cuisine[-inTrain] == preds)
-}&lt;/p&gt;
+&lt;span class=&quot;n&quot;&gt;testLogit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;testData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# test multinomial logistic regression model
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# Args: mod nnet:multinom object, 
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# testData (data.frame) data on which to test model
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# should include column &#39;correct&#39; with correct cuisine category
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;preds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;predict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;testData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;probs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;predict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;testData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;probs&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;bestProb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sapply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;preds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;probs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;preds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# Value data frame with nrow(testData) rows and columns:
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# correct - the correct cuisine, prediction - the predicted cuisine
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# probs - the probability value for the best option and isCorr (bool) if prediction is correct
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;data.frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;correct&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;testData&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DV_cuis&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;prediction&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;preds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+               &lt;span class=&quot;n&quot;&gt;probs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bestProb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isCorr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DV_cuisine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inTrain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;preds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
-&lt;p&gt;runLogit &amp;lt;- function(seed) {
-    dtm &amp;lt;- getTrainingData(“train.json”)
-    inTrain &amp;lt;- getPartitionForSeed(seed, dtm)
-    logitModel &amp;lt;- trainLogit(dtm, inTrain)
-    results &amp;lt;- testLogit(logitModel, dtm[-inTrain])
-}
-```&lt;/p&gt;
+&lt;span class=&quot;n&quot;&gt;runLogit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;seed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# run model for a given seed (numeric). Get data from train.json,
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# create data partition from seed, create model on training partition, then test on test partition
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getTrainingData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;train.json&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;inTrain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getPartitionForSeed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;seed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;logitModel&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trainLogit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;inTrain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# Value data.frame (from testLogit above)
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;testLogit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logitModel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inTrain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;When we run the predict command on our testing data, we get the predicted value 
 and when we run the same command, but with the &lt;code class=&quot;highlighter-rouge&quot;&gt;type = &quot;probs&quot;&lt;/code&gt; argument, we get a 
@@ -373,82 +385,38 @@ SVD using the &lt;code class=&quot;highlighter-rouge&quot;&gt;irlba&lt;/code&gt;
 reduce the original matrix to a smaller size and returns a vector that we can
 multiply through the original matrix to get it to the right size.&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;r
-getIrlba &amp;lt;- function(dtm) {
-    all.data.svd = irlba(dtm, nv = 400,nu=0)
-    as.data.frame(dtm %*% all.data.svd$v)
-}
-&lt;/code&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;getIrlba&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;all.data.svd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;irlba&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nv&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;400&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nu&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;as.data.frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%*%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;all.data.svd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;The updated results? A small improvement. Not massive. But an improvement all the
 same.&lt;/p&gt;
 
 </description>
         <pubDate>Wed, 23 Dec 2015 00:00:00 +0000</pubDate>
-        <link>/2015/12/23/predictions-with-logistic-regression.html</link>
-        <guid isPermaLink="true">/2015/12/23/predictions-with-logistic-regression.html</guid>
+        <link>/2015/12/23/whats-cooking-(2-of-3)-predictions-with-logistic-regression.html</link>
+        <guid isPermaLink="true">/2015/12/23/whats-cooking-(2-of-3)-predictions-with-logistic-regression.html</guid>
         
-        
-      </item>
-    
-      <item>
-        <title>Welcome to Jekyll!</title>
-        <description>&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
-
-&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
-
-&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;Tom&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints &#39;Hi, Tom&#39; to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;
-
-</description>
-        <pubDate>Tue, 22 Dec 2015 22:56:20 +0000</pubDate>
-        <link>/jekyll/update/2015/12/22/welcome-to-jekyll.html</link>
-        <guid isPermaLink="true">/jekyll/update/2015/12/22/welcome-to-jekyll.html</guid>
-        
-        
-        <category>jekyll</category>
-        
-        <category>update</category>
         
       </item>
     
       <item>
         <title>whats cooking intro</title>
-        <description>&lt;p&gt;The first competition I entered came under the title “What’s cooking” and involved
-coming up with predictions about what cuisine (mostly nationality) a particular 
-recipe (that appeared on yummly.com) came from. I liked the sound of this 
-competition, as I am a bit of a foodie and I am very interested in learning how 
-to process text in R, rather than in python.&lt;/p&gt;
+        <description>&lt;p&gt;The first competition I entered came under the title “What’s cooking” and involved predicting which part of the world recipes, that appeared on yummly.com, came from. I liked the sound of this competition, as I am a bit of a foodie - so it seemed like a good place to start.&lt;/p&gt;
 
-&lt;p&gt;The training and testing data came in JSON format, giving an ID number, a list 
-of ingredients and (in the training data only) one of twenty cuisines. Having 
-worked a bit with Naive Bayes classifiers, I immediately thought that this was
-going to be difficult to categorize in a single model.&lt;/p&gt;
-
-&lt;p&gt;My principle goal for this model was to come up with a plan and execute it, 
-hopefully coming up with a template for future projects, some reusable code and
-learn a few lessons. In this post, I briefly go over how to get the data, get it ready
-to be analyzed and some simple analysis.&lt;/p&gt;
+&lt;p&gt;The data came in JSON format, giving an ID number, a list of ingredients and one of twenty cuisines. My principle goal for this competiton was to come up with a plan and execute it, hopefully coming up with a template for future projects, some reusable code and a few lessons learned. More important than getting a high score was understanding how and why a model might work and perhaps its limitations. In this post, I briefly go over how to get the data, get it ready to be analyzed and some simple analysis.&lt;/p&gt;
 
 &lt;h3 id=&quot;getting-the-data&quot;&gt;Getting the data&lt;/h3&gt;
 
-&lt;p&gt;Converting the data to a data.frame from JSON is pretty simple, using the &lt;code class=&quot;highlighter-rouge&quot;&gt;jsonlite&lt;/code&gt;
-package. This flattens the hierarchical json file into one that is easier to work
-with in R.&lt;/p&gt;
+&lt;p&gt;Converting the data to a data.frame from JSON was pretty simple, using the &lt;code class=&quot;highlighter-rouge&quot;&gt;jsonlite&lt;/code&gt; package. This flattens the hierarchical json file into one that is easier to work with in R.&lt;/p&gt;
 
-&lt;p&gt;I then start using the &lt;code class=&quot;highlighter-rouge&quot;&gt;tm&lt;/code&gt; package to put each item of ingredients into a Corpus, 
-so we can start making transformations to the text and then create a Document 
-Term Matrix that can be used in our various models.&lt;/p&gt;
+&lt;p&gt;I then start using the &lt;code class=&quot;highlighter-rouge&quot;&gt;tm&lt;/code&gt; package to put each item of ingredients into a Corpus, so we can start making transformations to the text and then create a Document Term Matrix that can be used in our various models. This matrix is essentially what is known as a ‘bag of words’, where each word in the recipe - regardless of what came before and after it.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;n&quot;&gt;getTrainingData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsonFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;train&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fromJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;simplifyDataFrame&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TRUE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flatten&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TRUE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# get data from json file and convert to data frame
+&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# Arg: the path of the json file
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;train&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fromJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;simplifyDataFrame&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TRUE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flatten&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TRUE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;n&quot;&gt;ingredients&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Corpus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;VectorSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;train&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ingredients&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
   &lt;span class=&quot;c1&quot;&gt;# future transformations to the ingredients will go here...
 &lt;/span&gt;  
@@ -456,16 +424,15 @@ Term Matrix that can be used in our various models.&lt;/p&gt;
 &lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;as.data.frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;as.matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DocumentTermMatrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ingredients&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
   &lt;span class=&quot;c1&quot;&gt;# add dependent variable (cuisine) from train object
 &lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DV_cuisine&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;train&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cuisine&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# data.frame object returned
+  &lt;span class=&quot;c1&quot;&gt;# Value:  a data frame with DV_cuisine for the cuisine and a column for each word in the 
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# data.frame object returned
 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
 &lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dtm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getTrainingData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;train.json&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h3 id=&quot;distribution-of-cuisines&quot;&gt;Distribution of cuisines&lt;/h3&gt;
 
-&lt;p&gt;There are twenty cuisines, as you can see below, the cuisines are not equally 
-distributed. There are more Western cuisines than Eastern and quite a big 
-proportion are Italian, Mexican, Indian, Southern US and Chinese.&lt;/p&gt;
+&lt;p&gt;There are twenty cuisines, as you can see below, the cuisines are not equally distributed. There are more Western cuisines than Eastern and quite a big proportion are Italian, Mexican, Indian, Southern US and Chinese.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/figure/treemap-1.png&quot; alt=&quot;plot of chunk treemap&quot; /&gt;&lt;/p&gt;
 

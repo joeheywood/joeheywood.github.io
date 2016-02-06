@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>whats cooking intro</title>
-  <meta name="description" content="The first competition I entered came under the title “What’s cooking” and involvedcoming up with predictions about what cuisine (mostly nationality) a partic...">
+  <meta name="description" content="The first competition I entered came under the title “What’s cooking” and involved predicting which part of the world recipes, that appeared on yummly.com, c...">
 
   <link rel="stylesheet" href="/css/main.css">
   <link rel="canonical" href="/2015/12/22/whats-cooking-intro.html">
@@ -89,34 +89,20 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p>The first competition I entered came under the title “What’s cooking” and involved
-coming up with predictions about what cuisine (mostly nationality) a particular 
-recipe (that appeared on yummly.com) came from. I liked the sound of this 
-competition, as I am a bit of a foodie and I am very interested in learning how 
-to process text in R, rather than in python.</p>
+    <p>The first competition I entered came under the title “What’s cooking” and involved predicting which part of the world recipes, that appeared on yummly.com, came from. I liked the sound of this competition, as I am a bit of a foodie - so it seemed like a good place to start.</p>
 
-<p>The training and testing data came in JSON format, giving an ID number, a list 
-of ingredients and (in the training data only) one of twenty cuisines. Having 
-worked a bit with Naive Bayes classifiers, I immediately thought that this was
-going to be difficult to categorize in a single model.</p>
-
-<p>My principle goal for this model was to come up with a plan and execute it, 
-hopefully coming up with a template for future projects, some reusable code and
-learn a few lessons. In this post, I briefly go over how to get the data, get it ready
-to be analyzed and some simple analysis.</p>
+<p>The data came in JSON format, giving an ID number, a list of ingredients and one of twenty cuisines. My principle goal for this competiton was to come up with a plan and execute it, hopefully coming up with a template for future projects, some reusable code and a few lessons learned. More important than getting a high score was understanding how and why a model might work and perhaps its limitations. In this post, I briefly go over how to get the data, get it ready to be analyzed and some simple analysis.</p>
 
 <h3 id="getting-the-data">Getting the data</h3>
 
-<p>Converting the data to a data.frame from JSON is pretty simple, using the <code class="highlighter-rouge">jsonlite</code>
-package. This flattens the hierarchical json file into one that is easier to work
-with in R.</p>
+<p>Converting the data to a data.frame from JSON was pretty simple, using the <code class="highlighter-rouge">jsonlite</code> package. This flattens the hierarchical json file into one that is easier to work with in R.</p>
 
-<p>I then start using the <code class="highlighter-rouge">tm</code> package to put each item of ingredients into a Corpus, 
-so we can start making transformations to the text and then create a Document 
-Term Matrix that can be used in our various models.</p>
+<p>I then start using the <code class="highlighter-rouge">tm</code> package to put each item of ingredients into a Corpus, so we can start making transformations to the text and then create a Document Term Matrix that can be used in our various models. This matrix is essentially what is known as a ‘bag of words’, where each word in the recipe - regardless of what came before and after it.</p>
 
 <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">getTrainingData</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">jsonFile</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">train</span> <span class="o">&lt;-</span> <span class="n">fromJSON</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">simplifyDataFrame</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">flatten</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">)</span>
+  <span class="c1"># get data from json file and convert to data frame
+</span>  <span class="c1"># Arg: the path of the json file
+</span>  <span class="n">train</span> <span class="o">&lt;-</span> <span class="n">fromJSON</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">simplifyDataFrame</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">flatten</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">)</span>
   <span class="n">ingredients</span> <span class="o">&lt;-</span> <span class="n">Corpus</span><span class="p">(</span><span class="n">VectorSource</span><span class="p">(</span><span class="n">train</span><span class="o">$</span><span class="n">ingredients</span><span class="p">))</span>
   <span class="c1"># future transformations to the ingredients will go here...
 </span>  
@@ -124,16 +110,15 @@ Term Matrix that can be used in our various models.</p>
 </span>  <span class="n">dtm</span> <span class="o">&lt;-</span> <span class="n">as.data.frame</span><span class="p">(</span><span class="n">as.matrix</span><span class="p">(</span><span class="n">DocumentTermMatrix</span><span class="p">(</span><span class="n">ingredients</span><span class="p">)))</span>
   <span class="c1"># add dependent variable (cuisine) from train object
 </span>  <span class="n">dtm</span><span class="o">$</span><span class="n">DV_cuisine</span> <span class="o">&lt;-</span> <span class="n">train</span><span class="o">$</span><span class="n">cuisine</span>
-  <span class="n">dtm</span> <span class="c1"># data.frame object returned
+  <span class="c1"># Value:  a data frame with DV_cuisine for the cuisine and a column for each word in the 
+</span>  <span class="n">dtm</span> <span class="c1"># data.frame object returned
 </span><span class="p">}</span>
 
 <span class="err">#</span><span class="n">dtm</span> <span class="o">&lt;-</span> <span class="n">getTrainingData</span><span class="p">(</span><span class="s2">"train.json"</span><span class="p">)</span></code></pre></figure>
 
 <h3 id="distribution-of-cuisines">Distribution of cuisines</h3>
 
-<p>There are twenty cuisines, as you can see below, the cuisines are not equally 
-distributed. There are more Western cuisines than Eastern and quite a big 
-proportion are Italian, Mexican, Indian, Southern US and Chinese.</p>
+<p>There are twenty cuisines, as you can see below, the cuisines are not equally distributed. There are more Western cuisines than Eastern and quite a big proportion are Italian, Mexican, Indian, Southern US and Chinese.</p>
 
 <p><img src="/figure/treemap-1.png" alt="plot of chunk treemap" /></p>
 
@@ -166,8 +151,33 @@ training/testing sets if we wish.</p>
 
 
   </div>
+  
+  
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'joeheywood'; // required: replace example with your forum shortname
+        // var disqus_developer = 1; // Comment out when the site is live
+        var disqus_identifier = "/2015/12/22/whats-cooking-intro.html";
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//joeheywood.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
 
 </article>
+
+
+
 
       </div>
     </div>

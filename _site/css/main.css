@@ -150,8 +150,10 @@ pre {
 .site-header {
   border-top: 5px solid #424242;
   border-bottom: 1px solid #e8e8e8;
-  min-height: 56px;
-  position: relative; }
+  width: 100%;
+  height: 56px;
+  background-color: #FFFFFF;
+  position: fixed; }
 
 .site-title {
   font-size: 26px;
@@ -264,7 +266,7 @@ pre {
  * Page content
  */
 .page-content {
-  padding: 30px 0; }
+  padding: 50px 0px; }
 
 .page-heading {
   font-size: 20px; }
@@ -282,6 +284,12 @@ pre {
 .post-link {
   display: block;
   font-size: 24px; }
+
+/**
+ * Home
+ */
+.home {
+  min-height: 600px; }
 
 /**
  * Posts
