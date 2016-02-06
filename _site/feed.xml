@@ -6,9 +6,44 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 06 Feb 2016 22:54:52 +0000</pubDate>
-    <lastBuildDate>Sat, 06 Feb 2016 22:54:52 +0000</lastBuildDate>
+    <pubDate>Sat, 06 Feb 2016 22:58:22 +0000</pubDate>
+    <lastBuildDate>Sat, 06 Feb 2016 22:58:22 +0000</lastBuildDate>
     <generator>Jekyll v3.0.1</generator>
+    
+      <item>
+        <title>whats cooking results</title>
+        <description>&lt;p&gt;ok. so wrapping up.&lt;/p&gt;
+
+&lt;p&gt;I feel I only just got started getting somewhere with this project about a week after the deadline. So I’ve made a decision to stop and move on. But below are a reasonably neat.&lt;/p&gt;
+
+&lt;p&gt;I set up the data in a way that I can produce around 400 variables either as words in a simple bag of words model that takes out features that do not appear in at least 0.1% of recipes. This was my starting point and yielded a 73.0% success rate.&lt;/p&gt;
+
+&lt;p&gt;I added another function to transform the text on three key problems that looked wrong.&lt;/p&gt;
+
+&lt;p&gt;A third function takes all the words and condenses them into 400 variables using singular vector decomposition.&lt;/p&gt;
+
+&lt;p&gt;This gives me three possible data frames to test out two different models: a multi-nominal logistic regression model using the &lt;code class=&quot;highlighter-rouge&quot;&gt;nnet&lt;/code&gt; package and a random forest model using &lt;code class=&quot;highlighter-rouge&quot;&gt;h2o&lt;/code&gt; package. The initial model is pretty reliable.&lt;/p&gt;
+
+&lt;h3 id=&quot;text-transformation&quot;&gt;text transformation&lt;/h3&gt;
+
+&lt;p&gt;Somewhat surprisingly, the text transformations make the model a little worse, rather than better. In previous testing, I had chosen N variables to be in the model. So a bad variable was taking the place of a potentially better one. But with the method of choosing variables based on the proportion of recipes it appears in removes this possibility. All it does is make the individual variables a little more intuitive for the person interpreting the coefficients without improving the performance of predicting on the testing data. The success rate dropped to 71.2% with this model.&lt;/p&gt;
+
+&lt;h3 id=&quot;single-vector-decomposition-with-multinomial-logistic-regression&quot;&gt;single vector decomposition (with multinomial logistic regression&lt;/h3&gt;
+
+&lt;p&gt;Using the SVD should work better for our logistic regression. Rather than clumsily messing with the data, as I had done before, it compresses the full data (including the very sparse terms) into a single matrix that is manageable for our regression model so contains more signal and less noise. It does improve our predictions a little, rather than being a substantial improvement. But an improvement of only 1% can make a big difference for gaggle competitions. This prediction took me up to 74.9%&lt;/p&gt;
+
+&lt;h3 id=&quot;random-forest&quot;&gt;random forest&lt;/h3&gt;
+
+&lt;p&gt;For random forest, as before, the initial data works quite well - though not quite as well as the logistic regression model - 72.9%. Applying the SVD model is much less effective. This makes sense, as the removal of that sparse data is presumably more geared towards regression model type algorithms than decision tree models. So while it doesn’t ruin the predictions - it does add some error.&lt;/p&gt;
+
+&lt;p&gt;And there we go… next up: AirBnB&lt;/p&gt;
+</description>
+        <pubDate>Thu, 07 Jan 2016 00:00:00 +0000</pubDate>
+        <link>/2016/01/07/whats-cooking-results.html</link>
+        <guid isPermaLink="true">/2016/01/07/whats-cooking-results.html</guid>
+        
+        
+      </item>
     
       <item>
         <title>(whats cooking) predictions with logistic regression</title>
