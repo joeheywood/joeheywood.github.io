@@ -20,7 +20,7 @@ This gives me three possible data frames to test out two different models: a mul
 
 Somewhat surprisingly, the text transformations make the model a little worse, rather than better. In previous testing, I had chosen N variables to be in the model. So a bad variable was taking the place of a potentially better one. But with the method of choosing variables based on the proportion of recipes it appears in removes this possibility. All it does is make the individual variables a little more intuitive for the person interpreting the coefficients without improving the performance of predicting on the testing data. The success rate dropped to 71.2% with this model.
 
-### single vector decomposition (with multinomial logistic regression
+### single vector decomposition (with multinomial logistic regression)
 
 Using the SVD should work better for our logistic regression. Rather than clumsily messing with the data, as I had done before, it compresses the full data (including the very sparse terms) into a single matrix that is manageable for our regression model so contains more signal and less noise. It does improve our predictions a little, rather than being a substantial improvement. But an improvement of only 1% can make a big difference for gaggle competitions. This prediction took me up to 74.9%
 
